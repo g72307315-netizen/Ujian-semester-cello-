@@ -1,0 +1,253 @@
+import React, { useState } from 'react';
+
+const UjianSemesterApp = () => {
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [userAnswers, setUserAnswers] = useState<Record<number, string>>({});
+  const [showResults, setShowResults] = useState(false);
+
+  const questions = [
+    {
+      id: 31,
+      question: "Perhatikan gambar berikut. Nama dari simbol bahan kimia berbahaya adalah….",
+      options: [
+        { id: 'A', text: "Bahan mudah meledak jika terkena cahaya" },
+        { id: 'B', text: "Bahan merupakan oksidator yang dapat mempercepat pembakaran zat lain" },
+        { id: 'C', text: "Bahan hanya mudah larut dalam air" },
+        { id: 'D', text: "Bahan aman dicampur dengan zat mudah terbakar" }
+      ],
+      correctAnswer: "B",
+      image: "https://placeholder-image-service.onrender.com/image/300x200?prompt=Chemical%20symbol%20with%20flame%20above%20a%20circle%20indicating%20oxidizing%20material&id=8448e162-f307-4a3c-b385-1285aea385c8&customer_id=cus_SxHfu4RJ1QZvQe"
+    },
+    {
+      id: 32,
+      question: "Sebuah bahan kimia diberi label dengan simbol tengkorak dan tulang bersilang. Analisis yang tepat terkait penyimpanan bahan tersebut adalah …",
+      options: [
+        { id: 'A', text: "Dapat disimpan di tempat terbuka karena mudah menguap" },
+        { id: 'B', text: "Harus disimpan di ruangan terang agar terlihat jelas" },
+        { id: 'C', text: "Harus disimpan dengan wadah tertutup rapat dan diberi tanda peringatan bahaya" },
+        { id: 'D', text: "Tidak perlu diberi label tambahan" }
+      ],
+      correctAnswer: "C",
+      image: "https://placeholder-image-service.onrender.com/image/300x200?prompt=Skull%20and%20crossbones%20symbol%20on%20a%20chemical%20container%20indicating%20toxic%20substance&id=82a31190-5b15-41e8-8ab3-1a1c0e267ab1&customer_id=cus_SxHfu4RJ1QZvQe"
+    },
+    {
+      id: 33,
+      question: "Perhatikan tabel berikut\nBesaran \nSatuan \n1 Panjang \nMeter \n2 Luas \nM3\n3 Waktu \nSekon \n4 Volume \nM2\nBerdasarkan tabel diatas, Manakah besaran turunan dan satuannya yang sesuai adalah….",
+      options: [
+        { id: 'A', text: "Luas - m²" },
+        { id: 'B', text: "Luas - m³" },
+        { id: 'C', text: "Volume - m²" },
+        { id: 'D', text: "Volume - m³" }
+      ],
+      correctAnswer: "A"
+    },
+    {
+      id: 34,
+      question: "Jika kamu diminta menyusun rancangan eksperimen untuk mengetahui 'pengaruh pupuk organik terhadap pertumbuhan tanaman cabai', maka variabel bebas, terikat, dan kontrol yang paling tepat adalah …",
+      options: [
+        { id: 'A', text: "Bebas: pertumbuhan tanaman, Terikat: jenis pupuk, Kontrol: cahaya" },
+        { id: 'B', text: "Bebas: jenis pupuk, Terikat: pertumbuhan tanaman, Kontrol: cahaya dan air" },
+        { id: 'C', text: "Bebas: jumlah cahaya, Terikat: jenis pupuk, Kontrol: air" },
+        { id: 'D', text: "Bebas: jumlah air, Terikat: pupuk organik, Kontrol: cahaya" }
+      ],
+      correctAnswer: "B"
+    },
+    {
+      id: 35,
+      question: "Seorang peneliti ingin merancang pemetaan DNA untuk menganalisis penyakit turunan pada manusia. Cabang biologi yang paling relevan adalah …",
+      options: [
+        { id: 'A', text: "Anatomi" },
+        { id: 'B', text: "Genetika" },
+        { id: 'C', text: "Histologi" },
+        { id: 'D', text: "Fisiologi" }
+      ],
+      correctAnswer: "B"
+    },
+    {
+      id: 36,
+      question: "Perhatikan gambar di bawah ini!",
+      options: [
+        { id: 'A', text: "Sel hewan" },
+        { id: 'B', text: "Sel tumbuhan" },
+        { id: 'C', text: "Sel bakteri" },
+        { id: 'D', text: "Sel jamur" }
+      ],
+      correctAnswer: "B",
+      image: "https://placeholder-image-service.onrender.com/image/300x200?prompt=Detailed%20diagram%20of%20a%20plant%20cell%20with%20cell%20wall%20and%20chloroplasts&id=9e4c5d01-8a8d-4c16-9e3c-61a4b6d6b237&customer_id=cus_SxHfu4RJ1QZvQe"
+    }
+  ];
+
+  const handleAnswerSelect = (answerId: string) => {
+    setUserAnswers({ ...userAnswers, [currentQuestion]: answerId });
+  };
+
+  const goToNextQuestion = () => {
+    if (currentQuestion < questions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    } else {
+      setShowResults(true);
+    }
+  };
+
+  const goToPreviousQuestion = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const calculateScore = () => {
+    let correctCount = 0;
+    questions.forEach((question, index) => {
+      if (userAnswers[index] === question.correctAnswer) {
+        correctCount++;
+      }
+    });
+    return correctCount;
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuestion(0);
+    setUserAnswers({});
+    setShowResults(false);
+  };
+
+  if (showResults) {
+    const score = calculateScore();
+    const percentage = (score / questions.length) * 100;
+    
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
+        <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-800 mb-6">Hasil Ujian Semester</h1>
+          
+          <div className="bg-green-50 rounded-lg p-6 mb-8 border border-green-200">
+            <div className="text-center">
+              <div className="text-4xl md:text-5xl font-bold text-blue-800">{score}/{questions.length}</div>
+              <div className="text-lg text-gray-600 mt-2">Jawaban Benar</div>
+              <div className="w-full bg-gray-200 rounded-full h-4 mt-4">
+                <div 
+                  className="bg-blue-600 h-4 rounded-full" 
+                  style={{ width: `${percentage}%` }}
+                ></div>
+              </div>
+              <div className="text-sm text-gray-500 mt-2">{percentage.toFixed(0)}%</div>
+            </div>
+          </div>
+          
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">Review Jawaban</h2>
+            {questions.map((question, index) => (
+              <div key={index} className="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div className="font-medium text-gray-800">
+                  {question.id}. {question.question.split('\n')[0]}
+                </div>
+                <div className="mt-2">
+                  <span className={`font-medium ${userAnswers[index] === question.correctAnswer ? 'text-green-600' : 'text-red-600'}`}>
+                    Jawaban Anda: {userAnswers[index] || 'Tidak dijawab'}
+                  </span>
+                  {userAnswers[index] !== question.correctAnswer && (
+                    <span className="ml-4 text-green-600 font-medium">
+                      Jawaban Benar: {question.correctAnswer}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+          
+          <button 
+            onClick={resetQuiz}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+          >
+            Kerjakan Ulang
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const currentQ = questions[currentQuestion];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-8">
+        <h1 className="text-2xl md:text-3xl font-bold text-center text-blue-800 mb-6">
+          Ujian Semester - Ilmu Pengetahuan Alam
+        </h1>
+        
+        <div className="mb-6 flex justify-between items-center">
+          <div className="text-sm text-gray-500">
+            Soal {currentQuestion + 1} dari {questions.length}
+          </div>
+          <div className="text-sm font-medium text-blue-600">
+            No. {currentQ.id}
+          </div>
+        </div>
+        
+        <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+          {currentQ.question.split('\n').map((line, i) => (
+            <p key={i} className="text-gray-800 mb-2">{line}</p>
+          ))}
+        </div>
+        
+        {currentQ.image && (
+          <div className="mb-6 flex justify-center">
+            <img 
+              src={currentQ.image} 
+              alt="Ilustrasi soal ujian yang menunjukkan simbol atau diagram terkait"
+              className="max-w-full h-auto rounded-lg border border-gray-200"
+            />
+          </div>
+        )}
+        
+        <div className="space-y-3 mb-8">
+          {currentQ.options.map((option) => (
+            <div 
+              key={option.id}
+              className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
+                userAnswers[currentQuestion] === option.id 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : 'border-gray-200 hover:border-blue-300'
+              }`}
+              onClick={() => handleAnswerSelect(option.id)}
+            >
+              <div className="flex items-center">
+                <div className={`w-8 h-8 flex items-center justify-center rounded-full mr-3 ${
+                  userAnswers[currentQuestion] === option.id 
+                    ? 'bg-blue-500 text-white' 
+                    : 'bg-gray-100 text-gray-700'
+                }`}>
+                  {option.id}
+                </div>
+                <span className="text-gray-800">{option.text}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="flex justify-between">
+          <button 
+            onClick={goToPreviousQuestion}
+            disabled={currentQuestion === 0}
+            className={`px-4 py-2 rounded-lg font-medium ${
+              currentQuestion === 0 
+                ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            Sebelumnya
+          </button>
+          
+          <button 
+            onClick={goToNextQuestion}
+            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+          >
+            {currentQuestion === questions.length - 1 ? 'Selesai' : 'Selanjutnya'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UjianSemesterApp;
